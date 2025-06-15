@@ -1,25 +1,24 @@
 import { Button } from "@/components/ui/button";
-// import { ModeToggle } from "@/components/mode-toggle";
+import Link from "next/link";
 
 export function Header() {
   return (
-    <header className="w-full border-b border-border bg-background">
+    <header className="w-full border-b border-border bg-background fixed">
       <div className="container mx-auto flex h-16 items-center justify-between">
-        
         <div className="text-xl font-bold">
-          {/* Magnetismo Humano */}
+            <Link href="/" className="text-primary hover:text-primary/80">
+              Magnetismo Humano
+            </Link>
         </div>
 
-        {/* Ações: Login e Cadastro */}
         <div className="flex items-center gap-4">
-          {/* <ModeToggle /> */}
 
           <Button variant="ghost">
-            Login
+            <Link href="/cadastre-se">Cadastre-se</Link>
           </Button>
 
           <Button>
-            Cadastre-se
+            <Link href="/login">Login</Link>
           </Button>
         </div>
       </div>

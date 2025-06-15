@@ -1,10 +1,7 @@
-import { Header } from "@/components/ui/header";
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
-  PaginationLink,
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
@@ -107,7 +104,6 @@ export default function Home() {
     <div className="min-h-screen flex mt-2">
       <div className="w-full max-w-3xl">
         <div className="space-y-6 w-full">
-          <Header />
           {questions.map((q) => (
             <a href="/" key={q.number} className="block mb-5 bg-white">
               <h2 className="text-lg font-100 mb-0">

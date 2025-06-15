@@ -9,7 +9,7 @@ const containerVariants = cva('mx-auto px-4 sm:px-6 lg:px-8', {
       constrainedPadded: 'max-w-7xl px-4 sm:px-6 lg:px-8',
       fullMobileBreakpointPadded: 'container mx-auto sm:px-6 lg:px-8',
       breakpointPadded: 'container mx-auto px-4 sm:px-6 lg:px-8',
-      narrowConstrainedPadded: 'max-w-7xl px-4 sm:px-6 lg:px-8 max-w-3xl w-full',
+      narrowConstrainedPadded: 'max-w-7xl px-4 sm:px-6 lg:px-8 max-w-3xl w-full mb-20',
     },
   },
   defaultVariants: {
