@@ -105,7 +105,7 @@ export default function Home() {
       <div className="w-full max-w-3xl">
         <div className="space-y-6 w-full">
           {questions.map((q) => (
-            <a href="/" key={q.number} className="block mb-5 bg-white">
+            <a href="/post/teste" key={q.number} className="block mb-5 bg-white">
               <h2 className="text-lg font-100 mb-0">
                 {q.number}. {q.question}
               </h2>
