@@ -10,13 +10,16 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import Link from "next/link";
 
 const formSchema = z.object({
   email: z.string().email({ message: "E-mail inválido." }),
   password: z.string().min(6, { message: "A senha deve ter no mínimo 6 caracteres." }),
+  keepConnected: z.boolean().optional(),
 });
 
 export default function Login() {
@@ -25,6 +28,7 @@ export default function Login() {
     defaultValues: {
       email: "",
       password: "",
+      keepConnected: false,
     },
   });
 
@@ -38,6 +42,7 @@ export default function Login() {
       <div className="w-full max-w-sm">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            {/* Campo Email */}
             <FormField
               control={form.control}
               name="email"
@@ -52,6 +57,7 @@ export default function Login() {
               )}
             />
 
+            {/* Campo Senha */}
             <FormField
               control={form.control}
               name="password"
@@ -66,6 +72,34 @@ export default function Login() {
               )}
             />
 
+            {/* Manter Conectado */}
+            <FormField
+              control={form.control}
+              name="keepConnected"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center space-x-2">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormLabel className="!m-0">Manter conectado</FormLabel>
+                </FormItem>
+              )}
+            />
+
+            {/* Esqueci minha senha */}
+            <div className="flex justify-end">
+              <Link
+                href="/recuperar-senha"
+                className="text-sm text-primary hover:underline"
+              >
+                Esqueci minha senha
+              </Link>
+            </div>
+
+            {/* Botão */}
             <Button type="submit" className="w-full">
               Entrar
             </Button>
