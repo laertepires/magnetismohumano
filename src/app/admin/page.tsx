@@ -28,7 +28,7 @@ export default function MyPostsPage() {
     <div className="container mx-auto max-w-4xl py-10 space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">My Posts</CardTitle>
+          <CardTitle className="text-2xl">Minhas publicações</CardTitle>
         </CardHeader>
 
         <CardContent className="space-y-4">

@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 export function Header() {
-  const ifLogged = true; // 🔥 Troque para false para testar o estado não logado
+  const ifLogged = false; // 🔥 Troque para false para testar o estado não logado
 
   return (
     <header className="w-full border-b border-border bg-neutral-900 text-white fixed z-50 left-0">
@@ -71,7 +71,7 @@ export function Header() {
                 <DropdownMenuSeparator />
 
                 <DropdownMenuItem className="text-red-500 cursor-pointer">
-                  Deslogar
+                  Sair
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

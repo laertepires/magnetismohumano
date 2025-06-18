@@ -14,6 +14,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useState } from "react";
+import { toast } from "sonner";
 
 // Schema de validação
 const formSchema = z.object({
@@ -26,6 +28,8 @@ const formSchema = z.object({
 });
 
 export default function Cadastro() {
+  const [loading, setLoading] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -36,9 +40,32 @@ export default function Cadastro() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    // Aqui você faz sua lógica de cadastro
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: values.username,
+          email: values.email,
+          password: values.password,
+        }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Erro no cadastro.");
+      }
+
+      toast.success("Cadastro realizado com sucesso!");
+      form.reset();
+    } catch (err: any) {
+      toast.error(err.message || "Erro no cadastro.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -46,7 +73,6 @@ export default function Cadastro() {
       <div className="w-full max-w-sm">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            
             {/* Username */}
             <FormField
               control={form.control}
@@ -118,8 +144,8 @@ export default function Cadastro() {
               )}
             />
 
-            <Button type="submit" className="w-full">
-              Cadastrar
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "Cadastrando..." : "Cadastrar"}
             </Button>
           </form>
         </Form>
