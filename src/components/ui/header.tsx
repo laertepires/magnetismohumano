@@ -61,21 +61,27 @@ export function Header() {
                 <DropdownMenuSeparator />
 
                 <DropdownMenuItem asChild>
-                  <Link href="/publicar" className="w-full">
-                    + Novo conteúdo
-                  </Link>
+                  <div className="text-white">
+                    <Link href="/admin/publicar" className="w-full">
+                      + Novo conteúdo
+                    </Link>
+                  </div>
                 </DropdownMenuItem>
 
                 <DropdownMenuItem asChild>
-                  <Link href="/admin" className="w-full">
-                    📄 Meus conteúdos
-                  </Link>
+                  <div className="text-white">
+                    <Link href="/admin" className="w-full">
+                      📄 Meus conteúdos
+                    </Link>
+                  </div>
                 </DropdownMenuItem>
 
                 <DropdownMenuItem asChild>
-                  <Link href="/admin/profile" className="w-full">
-                    ⚙️ Editar perfil
-                  </Link>
+                  <div className="text-white">
+                    <Link href="/admin/profile" className="w-full">
+                      ⚙️ Editar perfil
+                    </Link>
+                  </div>
                 </DropdownMenuItem>
 
                 <DropdownMenuSeparator />

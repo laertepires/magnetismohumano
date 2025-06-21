@@ -165,7 +165,13 @@ const MobileToolbarContent = ({
   </>
 );
 
-export function SimpleEditor() {
+export function SimpleEditor({
+  content,
+  setContent,
+}: {
+  content: string;
+  setContent: (value: string) => void;
+}) {
   const isMobile = useMobile();
   const windowSize = useWindowSize();
   const [mobileView, setMobileView] = React.useState<
@@ -174,7 +180,11 @@ export function SimpleEditor() {
   const toolbarRef = React.useRef<HTMLDivElement>(null);
 
   const editor = useEditor({
-    immediatelyRender: false,
+    content,
+    onUpdate: ({ editor }) => {
+      const html = editor.getHTML();
+      setContent(html);
+    },
     editorProps: {
       attributes: {
         autocomplete: "on",
@@ -220,17 +230,7 @@ export function SimpleEditor() {
 
   return (
     <EditorContext.Provider value={{ editor }}>
-      <Toolbar
-        ref={toolbarRef}
-        // style={{ width: "100%" }}
-        // style={
-        //   isMobile
-        //     ? {
-        //         bottom: `calc(100% - ${windowSize.height - bodyRect.y}px)`,
-        //       }
-        //     : {}
-        // }
-      >
+      <Toolbar ref={toolbarRef}>
         {mobileView === "main" ? (
           <MainToolbarContent
             onHighlighterClick={() => setMobileView("highlighter")}

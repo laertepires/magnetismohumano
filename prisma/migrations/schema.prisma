@@ -18,7 +18,7 @@ model User {
   id        String   @id @default(uuid())
   username  String   @unique
   email     String   @unique
-  password  String  
+  password  String
   bio       String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -28,10 +28,10 @@ model User {
 model Post {
   id        String   @id @default(uuid())
   title     String
+  source    String
   content   String
-  source    String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
   author    User     @relation(fields: [authorId], references: [id])
   authorId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

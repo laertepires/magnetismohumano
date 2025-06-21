@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -14,12 +15,10 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { EditorContent, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import Editor from "@/components/ui/editor";
+import { toast } from "sonner";
 import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
 
-// Schema de validação
+// ✅ Schema de validação
 const formSchema = z.object({
   title: z.string().min(3, { message: "O título deve ter no mínimo 3 caracteres." }),
   source: z.string().min(3, { message: "A fonte deve ter no mínimo 3 caracteres." }),
@@ -27,7 +26,16 @@ const formSchema = z.object({
 });
 
 export default function Publicar() {
-  const [content, setContent] = useState("");
+  const router = useRouter();
+
+  // ✅ Verifica se o usuário está logado
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("Você precisa estar logado para publicar.");
+      router.push("/login");
+    }
+  }, [router]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -38,18 +46,39 @@ export default function Publicar() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    const data = { ...values, content };
-    console.log(data);
-    // Aqui você pode fazer a chamada para sua API de publicação
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("Não autorizado.");
+      }
+
+      const res = await fetch("/api/posts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(values),
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || "Erro ao publicar.");
+      }
+
+      toast.success("Publicação realizada com sucesso!");
+      router.push("/admin");
+    } catch (error: any) {
+      toast.error(error.message || "Erro ao publicar.");
+    }
   }
 
   return (
-    <div className="min-h-screen flex items-center  px-4">
+    <div className="min-h-screen flex items-center px-4">
       <div className="w-full max-w-2xl">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            
             {/* Título */}
             <FormField
               control={form.control}
@@ -81,15 +110,22 @@ export default function Publicar() {
             />
 
             {/* Corpo da Publicação */}
-            <FormItem>
-              <FormLabel>Corpo da publicação</FormLabel>
-              <div className="border border-input rounded-md">
-                <SimpleEditor />
-              </div>
-              {content.length < 10 && (
-                <FormMessage>O conteúdo deve ter no mínimo 10 caracteres.</FormMessage>
+            <FormField
+              control={form.control}
+              name="content"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Corpo da publicação</FormLabel>
+                  <div className="border border-input rounded-md">
+                    <SimpleEditor
+                      content={field.value}
+                      setContent={field.onChange}
+                    />
+                  </div>
+                  <FormMessage />
+                </FormItem>
               )}
-            </FormItem>
+            />
 
             <Button type="submit" className="w-full">
               Publicar
