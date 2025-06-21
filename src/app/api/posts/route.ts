@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { verifyToken } from "@/lib/auth";
 import { z } from "zod";
+import { slugify } from "@/lib/slugify";
 
 // ✅ Schema de validação
 const postSchema = z.object({
@@ -40,10 +41,12 @@ export async function POST(req: NextRequest) {
     }
 
     const { title, source, content } = validated.data;
+    const slug = slugify(title);
 
     const post = await prisma.post.create({
       data: {
         title,
+        slug,
         source,
         content,
         authorId: user.id,
