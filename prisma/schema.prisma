@@ -22,6 +22,8 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   posts     Post[]
+
+  comments Comment[]
 }
 
 model Post {
@@ -34,4 +36,23 @@ model Post {
   authorId  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  comments Comment[]
+}
+
+model Comment {
+  id          String    @id @default(uuid())
+  content     String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  post        Post      @relation(fields: [postId], references: [id])
+  postId      String
+  author      User      @relation(fields: [authorId], references: [id])
+  authorId    String
+
+  parent      Comment?  @relation("CommentToComment", fields: [parentId], references: [id])
+  parentId    String?
+
+  replies     Comment[] @relation("CommentToComment")
+
 }
