@@ -15,6 +15,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import Link from "next/link";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const formSchema = z.object({
   email: z.string().email({ message: "E-mail inválido." }),
@@ -23,6 +26,9 @@ const formSchema = z.object({
 });
 
 export default function Login() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -32,9 +38,39 @@ export default function Login() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    // Aqui você pode fazer a chamada para sua API de login
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: values.email,
+          password: values.password,
+        }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Erro no login.");
+      }
+
+      const data = await res.json();
+
+      // 🔥 Salvar token no localStorage (simples)
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("username", data.user.username);
+
+      toast.success("Login realizado com sucesso!");
+
+      // 🔥 Redirecionar para a home
+      router.push("/");
+    } catch (err: any) {
+      toast.error(err.message);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -100,8 +136,8 @@ export default function Login() {
             </div>
 
             {/* Botão */}
-            <Button type="submit" className="w-full">
-              Entrar
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "Entrando..." : "Entrar"}
             </Button>
           </form>
         </Form>

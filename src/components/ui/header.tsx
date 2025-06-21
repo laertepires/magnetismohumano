@@ -1,3 +1,5 @@
+"use client";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,9 +10,29 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export function Header() {
-  const ifLogged = false; // 🔥 Troque para false para testar o estado não logado
+  const [isLogged, setIsLogged] = useState(false);
+  const [username, setUsername] = useState<string | null>("");
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem("username");
+
+    if (token) {
+      setIsLogged(true);
+      setUsername(user);
+    } else {
+      setIsLogged(false);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    window.location.href = "/login";
+  };
 
   return (
     <header className="w-full border-b border-border bg-neutral-900 text-white fixed z-50 left-0">
@@ -24,54 +46,45 @@ export function Header() {
 
         {/* Ações */}
         <div className="flex items-center gap-4">
-          {ifLogged ? (
+          {isLogged ? (
             // 🔥 Menu do usuário (logado)
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="text-white">
-                  iamlaerte
+                  {username || "Usuário"}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56 bg-neutral-900">
                 <DropdownMenuLabel className="text-white">
-                  iamlaerte
+                  {username || "Usuário"}
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
 
                 <DropdownMenuItem asChild>
-                  <div className="text-white hover:text-neutral-900">
-                    <Link href="/publicar" className="w-full">
-                      + Novo conteúdo
-                    </Link>
-                  </div>
+                  <Link href="/publicar" className="w-full">
+                    + Novo conteúdo
+                  </Link>
                 </DropdownMenuItem>
 
                 <DropdownMenuItem asChild>
-                  <div className="text-white hover:text-neutral-900">
-                    <Link
-                      href="/admin"
-                      className="w-full hover:text-neutral-900"
-                    >
-                      📄 Meus conteúdos
-                    </Link>
-                  </div>
+                  <Link href="/admin" className="w-full">
+                    📄 Meus conteúdos
+                  </Link>
                 </DropdownMenuItem>
 
                 <DropdownMenuItem asChild>
-                  <div className="text-white hover:text-neutral-900">
-                    <Link
-                      href="/admin/profile"
-                      className="w-full hover:text-neutral-900"
-                    >
-                      ⚙️ Editar perfil
-                    </Link>
-                  </div>
+                  <Link href="/admin/profile" className="w-full">
+                    ⚙️ Editar perfil
+                  </Link>
                 </DropdownMenuItem>
 
                 <DropdownMenuSeparator />
 
-                <DropdownMenuItem className="text-red-500 cursor-pointer">
-                  Sair
+                <DropdownMenuItem
+                  className="text-red-500 cursor-pointer"
+                  onClick={handleLogout}
+                >
+                  🚪 Sair
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -79,7 +92,7 @@ export function Header() {
             <>
               <Button
                 variant="ghost"
-                className="text-white hover:text-neutral-900"
+                className="text-white hover:text-neutral-300"
               >
                 <Link href="/cadastre-se">Cadastre-se</Link>
               </Button>

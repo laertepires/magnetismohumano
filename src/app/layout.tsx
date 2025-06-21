@@ -29,6 +29,7 @@ export default function RootLayout({
     <html
       lang="pt-BR"
       className={`${geistSans.variable} ${geistMono.variable}`}
+      
     >
       <body className="min-h-screen bg-background font-sans antialiased flex justify-center w-screen">
         <Header />
