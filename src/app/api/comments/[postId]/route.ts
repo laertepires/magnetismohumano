@@ -9,7 +9,7 @@ export async function GET(
     const comments = await prisma.comment.findMany({
       where: {
         postId: params.postId,
-        parentId: null, // Só comentários raiz
+        parentId: null, // Apenas comentários raiz
       },
       include: {
         author: { select: { username: true } },
