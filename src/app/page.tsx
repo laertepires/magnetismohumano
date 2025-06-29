@@ -1,6 +1,12 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
-import { Pagination, PaginationContent, PaginationItem, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 interface SearchParams {
   searchParams: Promise<{
@@ -25,6 +31,11 @@ export default async function Home(props: SearchParams) {
         title: true,
         slug: true,
         createdAt: true,
+        _count: {
+          select: {
+            comments: true,
+          },
+        },
       },
       skip,
       take: POSTS_PER_PAGE,
@@ -43,7 +54,9 @@ export default async function Home(props: SearchParams) {
       <div className="w-full max-w-3xl">
         <div className="space-y-6 w-full py-10">
           {posts.length === 0 ? (
-            <p className="text-muted-foreground">Nenhuma publicação encontrada.</p>
+            <p className="text-muted-foreground">
+              Nenhuma publicação encontrada.
+            </p>
           ) : (
             posts.map((post, index) => (
               <a
@@ -52,14 +65,17 @@ export default async function Home(props: SearchParams) {
                 className="block border rounded-md p-4 bg-white hover:bg-neutral-100 transition"
               >
                 <h2 className="text-lg font-semibold mb-1">
-                  {(skip + index + 1)}. {post.title}
+                  {skip + index + 1}. {post.title}
                 </h2>
                 <div className="text-sm text-muted-foreground">
                   <span className="pr-2">
                     {new Date(post.createdAt).toLocaleDateString("pt-BR")}
                   </span>
                   ·
-                  <span className="pl-2">0 comentários</span>
+                  <span className="pl-2">
+                    {post._count.comments} comentário
+                    {post._count.comments === 1 ? "" : "s"}
+                  </span>
                 </div>
               </a>
             ))

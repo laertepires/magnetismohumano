@@ -12,19 +12,17 @@ export const transporter = nodemailer.createTransport({
 });
 
 export async function sendResetPasswordEmail(to: string, token: string) {
-  const resetUrl = `${process.env.URL_SITE}/resetar-senha?token=${token}`;
+  const resetUrl = `${process.env.URL_SITE}/reset-password?token=${token}`;
 
-  console.log("process.env.SMTP_USER:", process.env.SMTP_USER);
-  console.log("process.env.SMTP_PASS:", process.env.SMTP_PASS);
   try {
     await transporter.sendMail({
       from: '"Magnetismo Humano" <no-reply@magnetizandoonline.com.br>',
       to,
       subject: "Redefinição de senha",
       html: `
-      <h2>Redefinir senha</h2>
-      <p>Clique no botão abaixo para redefinir sua senha:</p>
-      <a href="${resetUrl}" style="display:inline-block;padding:10px 20px;background-color:#4f46e5;color:white;border-radius:4px;text-decoration:none">Redefinir senha</a>
+      <h2 style="margin-bottom: 10px">Redefinir senha</h2>
+      <p style="margin-bottom: 10px">Clique no botão abaixo para redefinir sua senha:</p>
+      <a href="${resetUrl}" style="margin-bottom: 10px; display:inline-block;padding:10px 20px;background-color:#4f46e5;color:white;border-radius:4px;text-decoration:none">Redefinir senha</a>
       <p>Se você não solicitou essa alteração, ignore este e-mail.</p>
     `,
     });
