@@ -12,10 +12,8 @@ const postSchema = z.object({
 });
 
 // ✅ Método PUT → Editar o post
-export async function PUT(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const { id } = params;
 
   const authHeader = req.headers.get("authorization");
@@ -77,10 +75,8 @@ export async function PUT(
 }
 
 // ✅ Método GET → Buscar dados do post (para carregar no form de edição)
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const { id } = params;
 
   const authHeader = req.headers.get("authorization");

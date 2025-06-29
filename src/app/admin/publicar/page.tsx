@@ -28,7 +28,6 @@ const formSchema = z.object({
 export default function Publicar() {
   const router = useRouter();
 
-  // ✅ Verifica se o usuário está logado
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {

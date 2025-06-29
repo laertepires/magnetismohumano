@@ -3,14 +3,15 @@ import { notFound } from "next/navigation";
 import { Pagination, PaginationContent, PaginationItem, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 
 interface SearchParams {
-  searchParams: {
+  searchParams: Promise<{
     page?: string;
-  };
+  }>;
 }
 
 const POSTS_PER_PAGE = 10;
 
-export default async function Home({ searchParams }: SearchParams) {
+export default async function Home(props: SearchParams) {
+  const searchParams = await props.searchParams;
   const currentPage = Number(searchParams.page) || 1;
   const skip = (currentPage - 1) * POSTS_PER_PAGE;
 

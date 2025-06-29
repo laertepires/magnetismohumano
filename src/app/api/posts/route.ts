@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifyToken } from "@/lib/auth";
 import { z } from "zod";
 import { slugify } from "@/lib/slugify";
+import { generateUniqueSlug } from "@/lib/generateUniqueSlug";
 
 // ✅ Schema de validação
 const postSchema = z.object({
@@ -41,7 +42,7 @@ export async function POST(req: NextRequest) {
     }
 
     const { title, source, content } = validated.data;
-    const slug = slugify(title);
+    const slug = await generateUniqueSlug(title);
 
     const post = await prisma.post.create({
       data: {

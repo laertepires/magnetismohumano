@@ -25,6 +25,10 @@ model User {
 
   posts     Post[]
   comments  Comment[]
+
+  PasswordResetToken PasswordResetToken[]
+  resetToken       String?
+  resetTokenExpires DateTime?
 }
 
 model Post {
@@ -55,4 +59,13 @@ model Comment {
 
   replies     Comment[] @relation("CommentToComment")
 
+}
+
+model PasswordResetToken {
+  id         String   @id @default(uuid())
+  token      String   @unique
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
 }

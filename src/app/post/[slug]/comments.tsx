@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
 import { toast } from "sonner";
+import parse from 'html-react-parser';
 
 interface Comment {
   id: string;
@@ -99,7 +100,7 @@ export default function Comments({ postId }: CommentsProps) {
             {new Date(comment.createdAt).toLocaleDateString("pt-BR")}
           </span>
         </div>
-        <p className="mt-2">{comment.content}</p>
+        <p className="mt-2">{parse(comment.content)}</p>
 
         <div className="mt-4">
           <Button

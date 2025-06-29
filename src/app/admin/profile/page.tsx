@@ -16,26 +16,86 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const formSchema = z.object({
-  username: z.string().min(2, { message: "O nome de usuário deve ter no mínimo 2 caracteres." }),
-  email: z.string().email({ message: "E-mail inválido." }),
-  bio: z.string().max(300, { message: "A bio pode ter no máximo 300 caracteres." }).optional(),
+  username: z
+    .string()
+    .min(2, { message: "O nome de usuário deve ter no mínimo 2 caracteres." }),
+  email: z.string().optional(),
+  bio: z
+    .string()
+    .max(300, { message: "A bio pode ter no máximo 300 caracteres." })
+    .optional(),
 });
 
 export default function EditProfilePage() {
+  const router = useRouter();
+  const token = localStorage.getItem("token");
+  useEffect(() => {
+    if (!token) {
+      toast.error("Você precisa estar logado para publicar.");
+      router.push("/login");
+    }
+  }, [router]);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "iamlaerte",
-      email: "laerte@email.com",
-      bio: "Desenvolvedor apaixonado por magnetismo humano, Next.js e TypeScript.",
+      username: "",
+      email: "",
+      bio: "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("Dados enviados:", values);
-    // Aqui você pode enviar os dados para sua API, banco de dados, etc.
+  useEffect(() => {
+    const fetchUser = async () => {
+      const res = await fetch("/api/user", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json();
+      form.reset({
+        username: data.username,
+        email: data.email,
+        bio: data.bio || "",
+      });
+    };
+
+    fetchUser();
+  }, [form]);
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch("/api/user/update", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          username: values.username,
+          // email: values.email,
+          bio: values.bio || "",
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || "Erro ao atualizar perfil");
+
+      toast.success("Perfil atualizado com sucesso!");
+      console.log("Perfil atualizado com sucesso:", data.user);
+    } catch (err: any) {
+      console.error(err.message);
+      toast.error(err.message || "Erro ao atualizar perfil");
+    }
   }
 
   return (
@@ -71,7 +131,12 @@ export default function EditProfilePage() {
                   <FormItem>
                     <FormLabel>E-mail</FormLabel>
                     <FormControl>
-                      <Input placeholder="seuemail@exemplo.com" type="email" {...field} />
+                      <Input
+                        placeholder="seuemail@exemplo.com"
+                        type="email"
+                        disabled
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

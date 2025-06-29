@@ -2,15 +2,17 @@ import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import parse from 'html-react-parser';
 import Comments from "./comments";
 
 interface PostPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
-export default async function PostPage({ params }: PostPageProps) {
+export default async function PostPage(props: PostPageProps) {
+  const params = await props.params;
   const post = await prisma.post.findUnique({
     where: { slug: params.slug },
     include: {
@@ -37,6 +39,9 @@ export default async function PostPage({ params }: PostPageProps) {
 
         <CardContent className="prose prose-neutral dark:prose-invert">
           <div dangerouslySetInnerHTML={{ __html: post.content }} />
+          <div>
+            {parse(post.content)}
+          </div>
           <Separator className="my-6" />
           <p>
             <strong>Fonte: </strong>
