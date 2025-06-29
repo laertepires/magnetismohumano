@@ -18,10 +18,13 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const formSchema = z.object({
   email: z.string().email({ message: "E-mail inválido." }),
-  password: z.string().min(6, { message: "A senha deve ter no mínimo 6 caracteres." }),
+  password: z
+    .string()
+    .min(6, { message: "A senha deve ter no mínimo 6 caracteres." }),
   keepConnected: z.boolean().optional(),
 });
 
@@ -64,6 +67,10 @@ export default function Login() {
 
       toast.success("Login realizado com sucesso!");
 
+      if (data.token && data.user.username) {
+        useAuthStore.getState().login(data.user.username);
+      }
+
       // 🔥 Redirecionar para a home
       router.push("/");
     } catch (err: any) {
@@ -86,7 +93,11 @@ export default function Login() {
                 <FormItem>
                   <FormLabel>E-mail</FormLabel>
                   <FormControl>
-                    <Input placeholder="seuemail@exemplo.com" type="email" {...field} />
+                    <Input
+                      placeholder="seuemail@exemplo.com"
+                      type="email"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -101,7 +112,11 @@ export default function Login() {
                 <FormItem>
                   <FormLabel>Senha</FormLabel>
                   <FormControl>
-                    <Input placeholder="Digite sua senha" type="password" {...field} />
+                    <Input
+                      placeholder="Digite sua senha"
+                      type="password"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -32,7 +32,7 @@ export default function RootLayout({
       
     >
       <body className="min-h-screen bg-background font-sans antialiased flex justify-center w-screen">
-        <Header />
+        <Header key={Date.now()} />
         <Container className="mt-20">
           <Toaster richColors />
           {children}

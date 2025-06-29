@@ -10,30 +10,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export function Header() {
-  const [isLogged, setIsLogged] = useState(false);
-  const [username, setUsername] = useState<string | null>("");
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const user = localStorage.getItem("username");
-
-    if (token) {
-      setIsLogged(true);
-      setUsername(user);
-    } else {
-      setIsLogged(false);
-    }
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("username");
-    window.location.href = "/login";
-  };
-
+  const { isLogged, username, logout } = useAuthStore();
+  console.log("Header rendered", { isLogged, username });
   return (
     <header className="w-full border-b border-border bg-neutral-900 text-white fixed z-50 left-0">
       <div className="container mx-auto flex h-16 items-center justify-between">
@@ -47,7 +28,6 @@ export function Header() {
         {/* Ações */}
         <div className="flex items-center gap-4">
           {isLogged ? (
-            // 🔥 Menu do usuário (logado)
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="text-white">
@@ -88,7 +68,7 @@ export function Header() {
 
                 <DropdownMenuItem
                   className="text-red-500 cursor-pointer"
-                  onClick={handleLogout}
+                  onClick={() => logout()}
                 >
                   🚪 Sair
                 </DropdownMenuItem>
