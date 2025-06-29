@@ -8,7 +8,7 @@
     "start": "next start",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
-    "prisma:studio": "prisma studio --schema=./prisma"
+    "prisma:studio": "prisma studio"
   },
   "dependencies": {
     "@floating-ui/react": "^0.27.12",

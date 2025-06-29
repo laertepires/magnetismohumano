@@ -31,9 +31,6 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Aqui você enviaria o e-mail com o link, ex:
-    // https://seusite.com/reset-password?token=abc123
-    // Exemplo apenas de retorno para testes:
     await sendResetPasswordEmail(user.email, token);
     return NextResponse.json({
       message: "Token de recuperação gerado.",

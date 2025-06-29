@@ -10,28 +10,24 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
     }
 
-    const user = await prisma.user.findFirst({
-      where: {
-        resetToken: token,
-        resetTokenExpires: {
-          gte: new Date(),
-        },
-      },
+    const tokenRecord = await prisma.passwordResetToken.findUnique({
+      where: { token },
+      include: { user: true },
     });
 
-    if (!user) {
+    if (!tokenRecord || tokenRecord.expiresAt < new Date()) {
       return NextResponse.json({ error: "Token inválido ou expirado" }, { status: 400 });
     }
 
     const hashedPassword = await hash(password, 10);
 
     await prisma.user.update({
-      where: { id: user.id },
-      data: {
-        password: hashedPassword,
-        resetToken: null,
-        resetTokenExpires: null,
-      },
+      where: { id: tokenRecord.userId },
+      data: { password: hashedPassword },
+    });
+
+    await prisma.passwordResetToken.delete({
+      where: { id: tokenRecord.id },
     });
 
     return NextResponse.json({ success: true });

@@ -27,8 +27,6 @@ model User {
   comments  Comment[]
 
   PasswordResetToken PasswordResetToken[]
-  resetToken       String?
-  resetTokenExpires DateTime?
 }
 
 model Post {
