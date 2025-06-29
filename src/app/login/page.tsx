@@ -61,17 +61,15 @@ export default function Login() {
 
       const data = await res.json();
 
-      // 🔥 Salvar token no localStorage (simples)
       localStorage.setItem("token", data.token);
       localStorage.setItem("username", data.user.username);
 
       toast.success("Login realizado com sucesso!");
 
       if (data.token && data.user.username) {
-        useAuthStore.getState().login(data.user.username);
+        useAuthStore.getState().login(data);
       }
 
-      // 🔥 Redirecionar para a home
       router.push("/");
     } catch (err: any) {
       toast.error(err.message);

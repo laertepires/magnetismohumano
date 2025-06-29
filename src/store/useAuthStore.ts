@@ -1,20 +1,25 @@
 import { create } from "zustand";
 
+interface AuthData {
+  token: string;
+  username: string;
+}
+
 interface AuthState {
   isLogged: boolean;
   username: string | null;
-  login: (username: string) => void;
+  login: (data: AuthData) => void;
   logout: () => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
   isLogged: !!localStorage?.getItem("token"),
   username: localStorage?.getItem("username") ?? null,
-  login: (username) =>
+  login: (data: AuthData) =>
     set(() => {
-      localStorage.setItem("token", "1");
-      localStorage.setItem("username", username);
-      return { isLogged: true, username };
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("username", data.username);
+      return { isLogged: true, data: data.username };
     }),
   logout: () =>
     set(() => {

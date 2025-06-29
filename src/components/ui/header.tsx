@@ -14,7 +14,6 @@ import { useAuthStore } from "@/store/useAuthStore";
 
 export function Header() {
   const { isLogged, username, logout } = useAuthStore();
-  console.log("Header rendered", { isLogged, username });
   return (
     <header className="w-full border-b border-border bg-neutral-900 text-white fixed z-50 left-0">
       <div className="container mx-auto flex h-16 items-center justify-between">
