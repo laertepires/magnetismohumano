@@ -3,10 +3,11 @@ import { verifyToken } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 
 interface Params {
-  params: { commentId: string };
+  params: Promise<{ commentId: string }>;
 }
 
-export async function DELETE(req: NextRequest, { params }: Params) {
+export async function DELETE(req: NextRequest, props: Params) {
+  const params = await props.params;
   try {
     const token = req.headers.get("Authorization")?.replace("Bearer ", "");
 
@@ -54,7 +55,8 @@ export async function DELETE(req: NextRequest, { params }: Params) {
 }
 
 
-export async function GET(req: NextRequest, { params }: Params) {
+export async function GET(req: NextRequest, props: Params) {
+  const params = await props.params;
   try {
     console.log("Buscando comentário:", params.commentId);
     const token = req.headers.get("Authorization")?.replace("Bearer ", "");
