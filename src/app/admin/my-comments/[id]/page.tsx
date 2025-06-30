@@ -42,7 +42,7 @@ export default function EditCommentPage() {
         if (!res.ok) throw new Error("Erro ao buscar comentário.");
 
         const data = await res.json();
-        form.setValue("content", data.content);
+        form.setValue("content", parse(data.content) as string || ""); // Parse HTML content to React component
       } catch (error: any) {
         toast.error(error.message);
       } finally {
