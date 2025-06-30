@@ -61,12 +61,10 @@ export default function Login() {
 
       const data = await res.json();
 
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("username", data.user.username);
-
       toast.success("Login realizado com sucesso!");
 
       if (data.token && data.user.username) {
+        console.log("Login data:", data);
         useAuthStore.getState().login(data);
       }
 

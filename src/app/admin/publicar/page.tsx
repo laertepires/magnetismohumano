@@ -17,6 +17,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { toast } from "sonner";
 import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
+import { useAuthStore } from "@/store/useAuthStore";
 
 // ✅ Schema de validação
 const formSchema = z.object({
@@ -27,9 +28,9 @@ const formSchema = z.object({
 
 export default function Publicar() {
   const router = useRouter();
+  const { token } = useAuthStore();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
     if (!token) {
       toast.error("Você precisa estar logado para publicar.");
       router.push("/login");
@@ -47,7 +48,6 @@ export default function Publicar() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const token = localStorage.getItem("token");
       if (!token) {
         throw new Error("Não autorizado.");
       }

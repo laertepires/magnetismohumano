@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import { toast } from "sonner";
+import { useAuthStore } from "@/store/useAuthStore";
 
 interface Post {
   id: string;
@@ -18,9 +19,9 @@ export default function ProfilePage() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const { token } = useAuthStore();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
     if (!token) {
       toast.error("Você precisa estar logado.");
       router.push("/login");
@@ -56,7 +57,6 @@ export default function ProfilePage() {
     const confirm = window.confirm("Tem certeza que deseja deletar este post?");
     if (!confirm) return;
 
-    const token = localStorage.getItem("token");
     if (!token) {
       toast.error("Não autorizado.");
       return;

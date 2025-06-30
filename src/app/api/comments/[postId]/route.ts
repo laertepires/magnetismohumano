@@ -7,7 +7,8 @@ export async function GET(_: Request, props: { params: Promise<{ postId: string 
     const comments = await prisma.comment.findMany({
       where: {
         postId: params.postId,
-        parentId: null, // Apenas comentários raiz
+        parentId: null,
+        deleted: false,
       },
       include: {
         author: { select: { username: true } },

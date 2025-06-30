@@ -17,6 +17,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { toast } from "sonner";
 import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
+import { useAuthStore } from "@/store/useAuthStore";
 
 // ✅ Schema de validação
 const formSchema = z.object({
@@ -31,7 +32,7 @@ export default function EditPostPage() {
   const { id } = params as { id: string };
 
   const [loading, setLoading] = useState(true);
-
+  const { token } = useAuthStore();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -45,7 +46,6 @@ export default function EditPostPage() {
 
   // 🔥 Carregar dados do post existente
   useEffect(() => {
-    const token = localStorage.getItem("token");
     if (!token) {
       toast.error("Você precisa estar logado.");
       router.push("/login");
@@ -83,7 +83,6 @@ export default function EditPostPage() {
   // 🔥 Enviar edição
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const token = localStorage.getItem("token");
       if (!token) {
         throw new Error("Não autorizado.");
       }

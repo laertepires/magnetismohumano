@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
 import { toast } from "sonner";
-import parse from 'html-react-parser';
+import parse from "html-react-parser";
+import { useAuthStore } from "@/store/useAuthStore";
 
 interface Comment {
   id: string;
@@ -24,9 +25,12 @@ interface CommentsProps {
 export default function Comments({ postId }: CommentsProps) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [showEditorForComment, setShowEditorForComment] = useState<string | null>(null);
+  const [showEditorForComment, setShowEditorForComment] = useState<
+    string | null
+  >(null);
   const [showEditorForPost, setShowEditorForPost] = useState(false);
   const [editorContent, setEditorContent] = useState<string>("");
+  const { token } = useAuthStore();
 
   useEffect(() => {
     fetchComments();
@@ -44,7 +48,6 @@ export default function Comments({ postId }: CommentsProps) {
   };
 
   const handleSubmit = async (parentId?: string) => {
-    const token = localStorage.getItem("token");
     if (!token) {
       toast.error("Você precisa estar logado para comentar.");
       return;
@@ -95,7 +98,9 @@ export default function Comments({ postId }: CommentsProps) {
         className={`border rounded-md p-4 ${isReply ? "ml-6" : ""}`}
       >
         <div className="flex justify-between">
-          <span className="text-sm font-semibold">{comment.author.username}</span>
+          <span className="text-sm font-semibold">
+            {comment.author.username}
+          </span>
           <span className="text-xs text-muted-foreground">
             {new Date(comment.createdAt).toLocaleDateString("pt-BR")}
           </span>
@@ -118,7 +123,10 @@ export default function Comments({ postId }: CommentsProps) {
 
         {showEditorForComment === comment.id && (
           <div className="mt-4 border rounded-md p-4">
-            <SimpleEditor content={editorContent} setContent={setEditorContent} />
+            <SimpleEditor
+              content={editorContent}
+              setContent={setEditorContent}
+            />
             <div className="flex gap-2 mt-2">
               <Button
                 size="sm"
@@ -138,8 +146,7 @@ export default function Comments({ postId }: CommentsProps) {
           </div>
         )}
 
-        {comment?.replies?.length > 0 &&
-          renderComments(comment.replies, true)}
+        {comment?.replies?.length > 0 && renderComments(comment.replies, true)}
       </div>
     ));
   };
@@ -158,16 +165,10 @@ export default function Comments({ postId }: CommentsProps) {
         <div className="mt-4 border rounded-md p-4">
           <SimpleEditor content={editorContent} setContent={setEditorContent} />
           <div className="flex gap-2 mt-2">
-            <Button
-              onClick={() => handleSubmit()}
-              disabled={loading}
-            >
+            <Button onClick={() => handleSubmit()} disabled={loading}>
               {loading ? "Enviando..." : "Publicar"}
             </Button>
-            <Button
-              variant="ghost"
-              onClick={() => setShowEditorForPost(false)}
-            >
+            <Button variant="ghost" onClick={() => setShowEditorForPost(false)}>
               Cancelar
             </Button>
           </div>

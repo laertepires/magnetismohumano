@@ -1,30 +1,51 @@
+"use client";
+
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 interface AuthData {
   token: string;
-  username: string;
+  user: {
+    username: string;
+  };
 }
 
 interface AuthState {
   isLogged: boolean;
+  token: string | null;
   username: string | null;
   login: (data: AuthData) => void;
   logout: () => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-  isLogged: !!localStorage?.getItem("token"),
-  username: localStorage?.getItem("username") ?? null,
-  login: (data: AuthData) =>
-    set(() => {
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("username", data.username);
-      return { isLogged: true, data: data.username };
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      isLogged: false,
+      token: null,
+      username: null,
+
+      login: (data: AuthData) =>
+        set(() => ({
+          isLogged: true,
+          token: data.token,
+          username: data.user.username,
+        })),
+
+      logout: () =>
+        set(() => ({
+          isLogged: false,
+          token: null,
+          username: null,
+        })),
     }),
-  logout: () =>
-    set(() => {
-      localStorage.removeItem("token");
-      localStorage.removeItem("username");
-      return { isLogged: false, username: null };
-    }),
-}));
+    {
+      name: "auth-storage",
+      partialize: (state) => ({
+        isLogged: state.isLogged,
+        token: state.token,
+        username: state.username,
+      }),
+    }
+  )
+);

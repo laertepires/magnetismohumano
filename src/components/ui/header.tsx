@@ -57,6 +57,14 @@ export function Header() {
 
                 <DropdownMenuItem asChild>
                   <div className="text-white">
+                    <Link href="/admin/my-comments" className="w-full">
+                       💬 Meus comentários
+                    </Link>
+                  </div>
+                </DropdownMenuItem>
+
+                <DropdownMenuItem asChild>
+                  <div className="text-white">
                     <Link href="/admin/profile" className="w-full">
                       ⚙️ Editar perfil
                     </Link>

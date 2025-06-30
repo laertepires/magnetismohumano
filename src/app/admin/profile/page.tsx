@@ -19,6 +19,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const formSchema = z.object({
   username: z
@@ -33,7 +34,7 @@ const formSchema = z.object({
 
 export default function EditProfilePage() {
   const router = useRouter();
-  const token = localStorage.getItem("token");
+  const { token } = useAuthStore();
   useEffect(() => {
     if (!token) {
       toast.error("Você precisa estar logado para publicar.");
@@ -72,7 +73,6 @@ export default function EditProfilePage() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const token = localStorage.getItem("token");
       const res = await fetch("/api/user/update", {
         method: "PUT",
         headers: {
