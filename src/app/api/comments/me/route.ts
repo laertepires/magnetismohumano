@@ -43,3 +43,36 @@ export async function GET(req: NextRequest) {
     );
   }
 }
+
+export async function PUT(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const { content, headers } = await req.json();
+    const token = headers.get("Authorization")?.replace("Bearer ", "");
+
+    if (!token) {
+      return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+    }
+
+    const user = verifyToken(token);
+
+    const comment = await prisma.comment.findUnique({
+      where: { id: params.id },
+    });
+
+    if (!comment || comment.authorId !== user?.id) {
+      return NextResponse.json({ error: "Não autorizado" }, { status: 403 });
+    }
+
+    await prisma.comment.update({
+      where: { id: params.id },
+      data: { content },
+    });
+
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    return NextResponse.json({ error: "Erro interno" }, { status: 500 });
+  }
+}

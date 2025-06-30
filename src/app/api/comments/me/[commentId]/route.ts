@@ -52,3 +52,42 @@ export async function DELETE(req: NextRequest, { params }: Params) {
     );
   }
 }
+
+
+export async function GET(req: NextRequest, { params }: Params) {
+  try {
+    console.log("Buscando comentário:", params.commentId);
+    const token = req.headers.get("Authorization")?.replace("Bearer ", "");
+
+    if (!token) {
+      return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
+    }
+
+    const decoded = verifyToken(token);
+    if (!decoded || !decoded.id) {
+      return NextResponse.json({ error: "Token inválido." }, { status: 401 });
+    }
+
+    const comment = await prisma.comment.findUnique({
+      where: {
+        id: params.commentId,
+        authorId: decoded.id,
+      },
+      select: {
+        id: true,
+        content: true,
+        createdAt: true,
+        postId: true,
+      },
+    });
+
+    if (!comment) {
+      return NextResponse.json({ error: "Comentário não encontrado." }, { status: 404 });
+    }
+
+    return NextResponse.json(comment);
+  } catch (error) {
+    console.error("Erro ao buscar comentário:", error);
+    return NextResponse.json({ error: "Erro interno." }, { status: 500 });
+  }
+}

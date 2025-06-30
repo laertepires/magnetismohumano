@@ -122,7 +122,7 @@ export default function MyCommentsPage() {
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <Link href={`/admin/comments/${comment.id}`} passHref>
+                    <Link href={`/admin/my-comments/${comment.id}`} passHref>
                       <button className="text-sm border rounded px-3 py-1 hover:bg-neutral-100 transition">
                         Editar
                       </button>
