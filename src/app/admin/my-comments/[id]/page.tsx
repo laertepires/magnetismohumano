@@ -42,7 +42,7 @@ export default function EditCommentPage() {
         if (!res.ok) throw new Error("Erro ao buscar comentário.");
 
         const data = await res.json();
-        form.setValue("content", parse(data.content) as string || ""); // Parse HTML content to React component
+        form.setValue("content", data.content || ""); // Parse HTML content to React component
       } catch (error: any) {
         toast.error(error.message);
       } finally {
@@ -79,6 +79,7 @@ export default function EditCommentPage() {
 
   if (loading) return <p className="p-4">Carregando...</p>;
 
+  console.log("Form values:", form.getValues());
   return (
     <div className="container max-w-xl mx-auto py-10 space-y-6">
       <h1 className="text-2xl font-bold">Editar Comentário</h1>

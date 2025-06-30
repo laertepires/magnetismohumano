@@ -93,3 +93,35 @@ export async function GET(req: NextRequest, props: Params) {
     return NextResponse.json({ error: "Erro interno." }, { status: 500 });
   }
 }
+
+export async function PUT(req: NextRequest, props: { params: Promise<{ commentId: string }> }) {
+  const params = await props.params;
+  try {
+    const { content } = await req.json();
+    const token = req.headers.get("Authorization")?.replace("Bearer ", "");
+
+    if (!token) {
+      return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+    }
+
+    const user = verifyToken(token);
+
+    const comment = await prisma.comment.findUnique({
+      where: { id: params.commentId },
+    });
+
+    if (!comment || comment.authorId !== user?.id) {
+      return NextResponse.json({ error: "Não autorizado" }, { status: 403 });
+    }
+
+    await prisma.comment.update({
+      where: { id: params.commentId },
+      data: { content },
+    });
+
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    console.error("Erro ao atualizar comentário:", err);
+    return NextResponse.json({ error: "Erro interno" }, { status: 500 });
+  }
+}
