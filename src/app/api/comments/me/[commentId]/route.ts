@@ -6,6 +6,12 @@ interface Params {
   params: Promise<{ commentId: string }>;
 }
 
+interface IUser {
+  id: string;
+  username: string;
+  email: string;
+}
+
 export async function DELETE(req: NextRequest, props: Params) {
   const params = await props.params;
   try {
@@ -15,7 +21,7 @@ export async function DELETE(req: NextRequest, props: Params) {
       return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
     }
 
-    const user = verifyToken(token);
+    const user = verifyToken(token) as IUser;
 
     if (!user?.id) {
       return NextResponse.json(
@@ -65,8 +71,8 @@ export async function GET(req: NextRequest, props: Params) {
       return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
     }
 
-    const decoded = verifyToken(token);
-    if (!decoded || !decoded.id) {
+    const decoded = verifyToken(token) as IUser;
+    if (!decoded) {
       return NextResponse.json({ error: "Token inválido." }, { status: 401 });
     }
 
@@ -104,7 +110,7 @@ export async function PUT(req: NextRequest, props: { params: Promise<{ commentId
       return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
     }
 
-    const user = verifyToken(token);
+    const user = verifyToken(token) as IUser;
 
     const comment = await prisma.comment.findUnique({
       where: { id: params.commentId },

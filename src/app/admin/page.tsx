@@ -43,14 +43,20 @@ export default function ProfilePage() {
 
         const data = await res.json();
         setPosts(data);
-      } catch (error: any) {
-        toast.error(error.message);
+      } catch (error: unknown) {
+        // Type guard
+        if (error instanceof Error) {
+          toast.error(error.message);
+        } else {
+          toast.error("Ocorreu um erro desconhecido");
+        }
       } finally {
         setLoading(false);
       }
     };
 
     fetchPosts();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
   const handleDelete = async (id: string) => {
@@ -77,8 +83,13 @@ export default function ProfilePage() {
 
       toast.success("Post deletado com sucesso.");
       setPosts((prev) => prev.filter((post) => post.id !== id));
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      // Type guard
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Ocorreu um erro desconhecido");
+      }
     }
   };
 
@@ -103,7 +114,8 @@ export default function ProfilePage() {
                   <div>
                     <h3 className="text-lg font-semibold">{post.title}</h3>
                     <p className="text-sm text-muted-foreground">
-                      Publicado em {new Date(post.createdAt).toLocaleDateString("pt-BR")}
+                      Publicado em{" "}
+                      {new Date(post.createdAt).toLocaleDateString("pt-BR")}
                     </p>
                   </div>
 

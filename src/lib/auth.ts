@@ -7,6 +7,6 @@ export function verifyToken(token: string) {
     const decoded = jwt.verify(token, JWT_SECRET) as { id: string; email: string };
     return decoded;
   } catch (error) {
-    return null;
+    return error;
   }
 }

@@ -47,7 +47,7 @@ import { BlockQuoteButton } from "@/components/tiptap-ui/blockquote-button";
 } from "@/components/tiptap-ui/color-highlight-popover";
 import {
   LinkPopover,
-  LinkContent,
+  // LinkContent,
   LinkButton,
 } from "@/components/tiptap-ui/link-popover";
 import { MarkButton } from "@/components/tiptap-ui/mark-button";
@@ -61,11 +61,11 @@ import { LinkIcon } from "@/components/tiptap-icons/link-icon";
 
 // --- Hooks ---
 import { useMobile } from "@/hooks/use-mobile";
-import { useWindowSize } from "@/hooks/use-window-size";
-import { useCursorVisibility } from "@/hooks/use-cursor-visibility";
+// import { useWindowSize } from "@/hooks/use-window-size";
+// import { useCursorVisibility } from "@/hooks/use-cursor-visibility";
 
 // --- Components ---
-import { ThemeToggle } from "@/components/tiptap-templates/simple/theme-toggle";
+// import { ThemeToggle } from "@/components/tiptap-templates/simple/theme-toggle";
 
 // --- Lib ---
 import { handleImageUpload, MAX_FILE_SIZE } from "@/lib/tiptap-utils";
@@ -173,7 +173,7 @@ export function SimpleEditor({
   setContent: (value: string) => void;
 }) {
   const isMobile = useMobile();
-  const windowSize = useWindowSize();
+  // const windowSize = useWindowSize();
   const [mobileView, setMobileView] = React.useState<
     "main" | "highlighter" | "link"
   >("main");
@@ -217,10 +217,10 @@ export function SimpleEditor({
     ],
   });
 
-  const bodyRect = useCursorVisibility({
-    editor,
-    overlayHeight: toolbarRef.current?.getBoundingClientRect().height ?? 0,
-  });
+  // const bodyRect = useCursorVisibility({
+  //   editor,
+  //   overlayHeight: toolbarRef.current?.getBoundingClientRect().height ?? 0,
+  // });
 
   React.useEffect(() => {
     if (!isMobile && mobileView !== "main") {

@@ -9,7 +9,6 @@ import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import parse from "html-react-parser";
 
 const schema = z.object({
   content: z.string().min(3, "O comentário deve ter pelo menos 3 caracteres."),
@@ -43,8 +42,12 @@ export default function EditCommentPage() {
 
         const data = await res.json();
         form.setValue("content", data.content || ""); // Parse HTML content to React component
-      } catch (error: any) {
-        toast.error(error.message);
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          toast.error(error.message);
+        } else {
+          toast.error("Ocorreu um erro desconhecido");
+        }
       } finally {
         setLoading(false);
       }
@@ -55,6 +58,7 @@ export default function EditCommentPage() {
       toast.error("Você precisa estar logado.");
       router.push("/login");
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const onSubmit = async (values: FormData) => {
@@ -72,8 +76,12 @@ export default function EditCommentPage() {
 
       toast.success("Comentário atualizado com sucesso!");
       router.push("/admin/my-comments");
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Ocorreu um erro desconhecido");
+      }
     }
   };
 

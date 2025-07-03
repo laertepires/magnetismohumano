@@ -2,8 +2,13 @@ import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { verifyToken } from "@/lib/auth";
 import { z } from "zod";
-import { slugify } from "@/lib/slugify";
 import { generateUniqueSlug } from "@/lib/generateUniqueSlug";
+
+interface IUser {
+  id: string;
+  username: string;
+  email: string;
+}
 
 // ✅ Schema de validação
 const postSchema = z.object({
@@ -20,7 +25,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
   }
 
-  const user = verifyToken(token);
+  const user = verifyToken(token) as IUser;
 
   if (!user) {
     return NextResponse.json(
@@ -43,6 +48,10 @@ export async function POST(req: NextRequest) {
 
     const { title, source, content } = validated.data;
     const slug = await generateUniqueSlug(title);
+
+    if (!user) {
+      return NextResponse.json({ error: "Usuário não encontrado" }, { status: 204 });
+    }
 
     const post = await prisma.post.create({
       data: {
@@ -77,6 +86,6 @@ export async function GET() {
 
     return NextResponse.json(posts);
   } catch (error) {
-    return NextResponse.json({ error: "Erro interno" }, { status: 500 });
+    return NextResponse.json({ error: error || "Erro interno" }, { status: 500 });
   }
 }

@@ -49,8 +49,12 @@ export default function MyCommentsPage() {
 
       toast.success("Comentário deletado com sucesso.");
       setComments((prev) => prev.filter((comment) => comment.id !== id));
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Ocorreu um erro desconhecido");
+      }
     }
   };
 
@@ -76,14 +80,19 @@ export default function MyCommentsPage() {
 
         const data = await res.json();
         setComments(data);
-      } catch (error: any) {
-        toast.error(error.message);
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          toast.error(error.message);
+        } else {
+          toast.error("Ocorreu um erro desconhecido");
+        }
       } finally {
         setLoading(false);
       }
     };
 
     fetchComments();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
   return (
@@ -135,7 +144,6 @@ export default function MyCommentsPage() {
                     </button>
                   </div>
                 </div>
-                
               </div>
             ))
           )}

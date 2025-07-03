@@ -4,6 +4,12 @@ import { verifyToken } from "@/lib/auth";
 import { z } from "zod";
 import { slugify } from "@/lib/slugify";
 
+interface IUser {
+  id: string;
+  username: string;
+  email: string;
+}
+
 // Schema de validação
 const postSchema = z.object({
   title: z.string().min(3, { message: "O título deve ter no mínimo 3 caracteres." }),
@@ -23,7 +29,7 @@ export async function PUT(req: NextRequest, props: { params: Promise<{ id: strin
     return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
   }
 
-  const user = verifyToken(token);
+  const user = verifyToken(token) as IUser;
 
   if (!user) {
     return NextResponse.json({ error: "Token inválido ou expirado" }, { status: 401 });
@@ -86,7 +92,7 @@ export async function GET(req: NextRequest, props: { params: Promise<{ id: strin
     return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
   }
 
-  const user = verifyToken(token);
+  const user = verifyToken(token) as IUser;
 
   if (!user) {
     return NextResponse.json({ error: "Token inválido ou expirado" }, { status: 401 });

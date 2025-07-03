@@ -34,6 +34,7 @@ export default function Comments({ postId }: CommentsProps) {
 
   useEffect(() => {
     fetchComments();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchComments = async () => {
@@ -42,7 +43,8 @@ export default function Comments({ postId }: CommentsProps) {
       if (!res.ok) throw new Error("Erro ao carregar comentários");
       const data = await res.json();
       setComments(data);
-    } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error: unknown) {
       toast.error("Erro ao carregar comentários");
     }
   };
@@ -84,8 +86,12 @@ export default function Comments({ postId }: CommentsProps) {
       setShowEditorForPost(false);
       setShowEditorForComment(null);
       fetchComments();
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Ocorreu um erro desconhecido");
+      }
     } finally {
       setLoading(false);
     }

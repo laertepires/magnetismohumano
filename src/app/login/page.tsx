@@ -69,8 +69,12 @@ export default function Login() {
       }
 
       router.push("/");
-    } catch (err: any) {
-      toast.error(err.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Ocorreu um erro desconhecido");
+      }
     } finally {
       setLoading(false);
     }

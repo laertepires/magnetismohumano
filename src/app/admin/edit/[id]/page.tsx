@@ -21,9 +21,15 @@ import { useAuthStore } from "@/store/useAuthStore";
 
 // ✅ Schema de validação
 const formSchema = z.object({
-  title: z.string().min(3, { message: "O título deve ter no mínimo 3 caracteres." }),
-  source: z.string().min(3, { message: "A fonte deve ter no mínimo 3 caracteres." }),
-  content: z.string().min(10, { message: "O conteúdo deve ter no mínimo 10 caracteres." }),
+  title: z
+    .string()
+    .min(3, { message: "O título deve ter no mínimo 3 caracteres." }),
+  source: z
+    .string()
+    .min(3, { message: "A fonte deve ter no mínimo 3 caracteres." }),
+  content: z
+    .string()
+    .min(10, { message: "O conteúdo deve ter no mínimo 10 caracteres." }),
 });
 
 export default function EditPostPage() {
@@ -44,7 +50,6 @@ export default function EditPostPage() {
 
   const { setValue } = form;
 
-  // 🔥 Carregar dados do post existente
   useEffect(() => {
     if (!token) {
       toast.error("Você precisa estar logado.");
@@ -69,16 +74,19 @@ export default function EditPostPage() {
         setValue("title", post.title);
         setValue("source", post.source);
         setValue("content", post.content);
-      } catch (error: any) {
-        toast.error(error.message);
-        router.push("/admin");
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          toast.error(error.message);
+        } else {
+          toast.error("Ocorreu um erro desconhecido");
+        }
       } finally {
         setLoading(false);
       }
     };
 
     fetchPost();
-  }, [id, router, setValue]);
+  }, [id, router, token, setValue]);
 
   // 🔥 Enviar edição
   async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -103,8 +111,12 @@ export default function EditPostPage() {
 
       toast.success("Post atualizado com sucesso!");
       router.push("/admin");
-    } catch (error: any) {
-      toast.error(error.message || "Erro ao atualizar.");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Ocorreu um erro desconhecido");
+      }
     }
   }
 
@@ -125,7 +137,10 @@ export default function EditPostPage() {
                   <FormItem>
                     <FormLabel>Título</FormLabel>
                     <FormControl>
-                      <Input placeholder="Digite o título da publicação" {...field} />
+                      <Input
+                        placeholder="Digite o título da publicação"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -140,7 +155,10 @@ export default function EditPostPage() {
                   <FormItem>
                     <FormLabel>Fonte</FormLabel>
                     <FormControl>
-                      <Input placeholder="Digite a fonte (ex.: livro, site, autor)" {...field} />
+                      <Input
+                        placeholder="Digite a fonte (ex.: livro, site, autor)"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

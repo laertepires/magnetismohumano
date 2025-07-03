@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import parse from 'html-react-parser';
 import Comments from "./comments";
+import Link from "next/link";
 
 interface PostPageProps {
   params: Promise<{
@@ -45,20 +46,20 @@ export default async function PostPage(props: PostPageProps) {
           <Separator className="my-6" />
           <p>
             <strong>Fonte: </strong>
-            <a
+            <Link
               href={post.source}
               target="_blank"
               className="text-blue-500 underline"
               rel="noreferrer"
             >
               {post.source}
-            </a>
+            </Link>
           </p>
 
           <div className="mt-6 flex gap-4">
-            <a href="/" className="btn">
+            <Link href="/" className="btn">
               <span className="border px-4 py-2 rounded-md">Voltar</span>
-            </a>
+            </Link>
           </div>
         </CardContent>
       </Card>

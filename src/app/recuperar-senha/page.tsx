@@ -47,10 +47,16 @@ export default function FargotPassword() {
 
       if (!res.ok) throw new Error(data?.error || "Erro ao enviar e-mail.");
 
-      toast.success("Se o e-mail existir, enviamos as instruções para redefinir sua senha.");
+      toast.success(
+        "Se o e-mail existir, enviamos as instruções para redefinir sua senha."
+      );
       form.reset();
-    } catch (error: any) {
-      toast.error(error.message || "Erro inesperado.");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Ocorreu um erro desconhecido");
+      }
     } finally {
       setLoading(false);
     }

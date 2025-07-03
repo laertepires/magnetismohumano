@@ -3,6 +3,12 @@ import { prisma } from "@/lib/prisma";
 import { verifyToken } from "@/lib/auth";
 import { z } from "zod";
 
+interface IUser {
+  id: string;
+  username: string;
+  email: string;
+}
+
 const schema = z.object({
   username: z.string().min(2),
   email: z.string().email().optional(),
@@ -17,7 +23,7 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
     }
 
-    const user = await verifyToken(token);
+    const user = await verifyToken(token) as IUser;
     const body = await req.json();
     const parsed = schema.safeParse(body);
 

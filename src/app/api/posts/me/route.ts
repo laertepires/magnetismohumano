@@ -2,6 +2,12 @@ import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { verifyToken } from "@/lib/auth";
 
+interface IUser {
+  id: string;
+  username: string;
+  email: string;
+}
+
 export async function GET(req: NextRequest) {
   const authHeader = req.headers.get("authorization");
   const token = authHeader?.split(" ")[1];
@@ -10,7 +16,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
   }
 
-  const user = verifyToken(token);
+  const user = verifyToken(token) as IUser;
 
   if (!user) {
     return NextResponse.json({ error: "Token inválido ou expirado" }, { status: 401 });

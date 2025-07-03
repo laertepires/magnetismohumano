@@ -19,9 +19,13 @@ import { toast } from "sonner";
 
 // Schema de validação
 const formSchema = z.object({
-  username: z.string().min(2, { message: "O nome de usuário deve ter no mínimo 2 caracteres." }),
+  username: z
+    .string()
+    .min(2, { message: "O nome de usuário deve ter no mínimo 2 caracteres." }),
   email: z.string().email({ message: "E-mail inválido." }),
-  password: z.string().min(6, { message: "A senha deve ter no mínimo 6 caracteres." }),
+  password: z
+    .string()
+    .min(6, { message: "A senha deve ter no mínimo 6 caracteres." }),
   terms: z.boolean().refine((value) => value === true, {
     message: "Você precisa aceitar os termos de uso.",
   }),
@@ -61,8 +65,12 @@ export default function Cadastro() {
 
       toast.success("Cadastro realizado com sucesso!");
       form.reset();
-    } catch (err: any) {
-      toast.error(err.message || "Erro no cadastro.");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Ocorreu um erro desconhecido");
+      }
     } finally {
       setLoading(false);
     }
@@ -81,7 +89,10 @@ export default function Cadastro() {
                 <FormItem>
                   <FormLabel>Usuário</FormLabel>
                   <FormControl>
-                    <Input placeholder="Digite seu nome de usuário" {...field} />
+                    <Input
+                      placeholder="Digite seu nome de usuário"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -96,7 +107,11 @@ export default function Cadastro() {
                 <FormItem>
                   <FormLabel>E-mail</FormLabel>
                   <FormControl>
-                    <Input placeholder="seuemail@exemplo.com" type="email" {...field} />
+                    <Input
+                      placeholder="seuemail@exemplo.com"
+                      type="email"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -111,7 +126,11 @@ export default function Cadastro() {
                 <FormItem>
                   <FormLabel>Senha</FormLabel>
                   <FormControl>
-                    <Input placeholder="Digite sua senha" type="password" {...field} />
+                    <Input
+                      placeholder="Digite sua senha"
+                      type="password"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -133,7 +152,11 @@ export default function Cadastro() {
                   <div className="space-y-1 leading-none">
                     <FormLabel>
                       Aceito os{" "}
-                      <a href="/termos" className="underline underline-offset-4" target="_blank">
+                      <a
+                        href="/termos"
+                        className="underline underline-offset-4"
+                        target="_blank"
+                      >
                         Termos de uso
                       </a>
                       .

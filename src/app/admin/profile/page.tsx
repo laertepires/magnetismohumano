@@ -40,6 +40,7 @@ export default function EditProfilePage() {
       toast.error("Você precisa estar logado para publicar.");
       router.push("/login");
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -69,6 +70,7 @@ export default function EditProfilePage() {
     };
 
     fetchUser();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -92,9 +94,12 @@ export default function EditProfilePage() {
 
       toast.success("Perfil atualizado com sucesso!");
       console.log("Perfil atualizado com sucesso:", data.user);
-    } catch (err: any) {
-      console.error(err.message);
-      toast.error(err.message || "Erro ao atualizar perfil");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message || "Erro ao atualizar perfil");
+      } else {
+        toast.error("Ocorreu um erro desconhecido");
+      }
     }
   }
 
