@@ -26,7 +26,7 @@ const formSchema = z.object({
     .min(3, { message: "O título deve ter no mínimo 3 caracteres." }),
   source: z
     .string()
-    .min(3, { message: "A fonte deve ter no mínimo 3 caracteres." }),
+    .optional(),
   content: z
     .string()
     .min(10, { message: "O conteúdo deve ter no mínimo 10 caracteres." }),

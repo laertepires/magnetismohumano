@@ -2,9 +2,10 @@ import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import parse from 'html-react-parser';
+import parse from "html-react-parser";
 import Comments from "./comments";
 import Link from "next/link";
+import ShareButton from "@/components/ui/share-buttom";
 
 interface PostPageProps {
   params: Promise<{
@@ -15,7 +16,7 @@ interface PostPageProps {
 export default async function PostPage(props: PostPageProps) {
   const params = await props.params;
   const post = await prisma.post.findUnique({
-    where: { slug: params.slug },
+    where: { slug: params.slug, deleted: false },
     include: {
       author: { select: { username: true } },
     },
@@ -40,9 +41,7 @@ export default async function PostPage(props: PostPageProps) {
 
         <CardContent className="prose prose-neutral dark:prose-invert">
           <div dangerouslySetInnerHTML={{ __html: post.content }} />
-          <div>
-            {parse(post.content)}
-          </div>
+          <div>{parse(post.content)}</div>
           <Separator className="my-6" />
           <p>
             <strong>Fonte: </strong>
@@ -57,9 +56,12 @@ export default async function PostPage(props: PostPageProps) {
           </p>
 
           <div className="mt-6 flex gap-4">
-            <Link href="/" className="btn">
+            <Link href="/" className="btn mt-2">
               <span className="border px-4 py-2 rounded-md">Voltar</span>
             </Link>
+            <div>
+              <ShareButton />
+            </div>
           </div>
         </CardContent>
       </Card>

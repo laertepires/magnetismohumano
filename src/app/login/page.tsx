@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useAuthStore } from "@/store/useAuthStore";
+import { Eye, EyeOff } from "lucide-react";
 
 const formSchema = z.object({
   email: z.string().email({ message: "E-mail inválido." }),
@@ -31,6 +32,7 @@ const formSchema = z.object({
 export default function Login() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -64,7 +66,6 @@ export default function Login() {
       toast.success("Login realizado com sucesso!");
 
       if (data.token && data.user.username) {
-        console.log("Login data:", data);
         useAuthStore.getState().login(data);
       }
 
@@ -112,11 +113,24 @@ export default function Login() {
                 <FormItem>
                   <FormLabel>Senha</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Digite sua senha"
-                      type="password"
-                      {...field}
-                    />
+                    <div className="relative">
+                      <Input
+                        placeholder="Digite sua senha"
+                        type={showPassword ? "text" : "password"}
+                        {...field}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                      >
+                        {showPassword ? (
+                          <EyeOff size={18} />
+                        ) : (
+                          <Eye size={18} />
+                        )}
+                      </button>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

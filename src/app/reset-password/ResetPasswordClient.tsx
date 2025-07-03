@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Eye, EyeOff } from "lucide-react";
 
 const schema = z
   .object({
@@ -35,9 +36,8 @@ export default function ResetPasswordClient() {
   const router = useRouter();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
-
+  const [showPassword, setShowPassword] = useState(false);
   const token = searchParams.get("token");
-  console.log("Token recebido:", token);
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -85,11 +85,25 @@ export default function ResetPasswordClient() {
                 <FormItem>
                   <FormLabel>Nova Senha</FormLabel>
                   <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="Nova senha"
-                      {...field}
-                    />
+                    <div className="relative">
+                      <Input
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Nova senha"
+                        {...field}
+                         className="pr-10"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                      >
+                        {showPassword ? (
+                          <EyeOff size={18} />
+                        ) : (
+                          <Eye size={18} />
+                        )}
+                      </button>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -102,11 +116,25 @@ export default function ResetPasswordClient() {
                 <FormItem>
                   <FormLabel>Confirmar Senha</FormLabel>
                   <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="Confirme sua senha"
-                      {...field}
-                    />
+                    <div className="relative">
+                      <Input
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Confirme sua senha"
+                        {...field}
+                         className="pr-10"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                      >
+                        {showPassword ? (
+                          <EyeOff size={18} />
+                        ) : (
+                          <Eye size={18} />
+                        )}
+                      </button>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

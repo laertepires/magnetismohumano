@@ -13,6 +13,9 @@ export async function GET() {
         slug: true,
         createdAt: true,
       },
+      where: {
+        deleted: false,
+      },
     });
 
     return NextResponse.json(posts);

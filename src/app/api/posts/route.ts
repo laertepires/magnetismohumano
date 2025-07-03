@@ -13,7 +13,7 @@ interface IUser {
 // ✅ Schema de validação
 const postSchema = z.object({
   title: z.string().min(3),
-  source: z.string().min(3),
+  source: z.string().optional(),
   content: z.string().min(10),
 });
 
@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
       data: {
         title,
         slug,
-        source,
+        source: source || "",
         content,
         authorId: user.id,
       },

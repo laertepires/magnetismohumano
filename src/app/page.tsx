@@ -23,6 +23,9 @@ export default async function Home(props: SearchParams) {
 
   const [posts, totalCount] = await Promise.all([
     prisma.post.findMany({
+      where: {
+        deleted: false,
+      },
       orderBy: {
         createdAt: "desc",
       },
@@ -60,7 +63,7 @@ export default async function Home(props: SearchParams) {
           ) : (
             posts.map((post, index) => (
               <a
-                href={`/post/${post.slug}`}
+                href={`/${post.slug}`}
                 key={post.id}
                 className="block border rounded-md p-4 bg-white hover:bg-neutral-100 transition"
               >
