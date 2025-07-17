@@ -20,7 +20,7 @@ export function Header() {
         {/* Logo */}
         <div className="text-xl font-bold">
           <Link href="/" className="hover:text-neutral-300">
-            Magnetismo online
+            Magnetizando online
           </Link>
         </div>
 
