@@ -141,3 +141,12 @@ a {
     @apply bg-background text-foreground;
   }
 }
+
+.card-content p,
+.card-content h1,
+.card-content h2,
+.card-content h3,
+.card-content h4,
+.card-content h5 {
+  padding-bottom: 1rem;
+}

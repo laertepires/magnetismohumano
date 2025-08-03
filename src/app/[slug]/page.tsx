@@ -40,8 +40,8 @@ export default async function PostPage(props: PostPageProps) {
         </CardHeader>
 
         <CardContent className="prose prose-neutral dark:prose-invert">
-          <div dangerouslySetInnerHTML={{ __html: post.content }} />
-          <div>{parse(post.content)}</div>
+          {/* <div dangerouslySetInnerHTML={{ __html: post.content }} /> */}
+          <div className="card-content">{parse(post.content)}</div>
           <Separator className="my-6" />
           <p>
             <strong>Fonte: </strong>
