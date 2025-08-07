@@ -121,7 +121,7 @@ export default function ProfilePage() {
 
                   <div className="flex items-center gap-2">
                     <Button variant="outline" size="sm" asChild>
-                      <Link href={`/post/${post.slug}`}>Visualizar</Link>
+                      <Link href={`/${post.slug}`}>Visualizar</Link>
                     </Button>
                     <Button variant="outline" size="sm" asChild>
                       <Link href={`/admin/edit/${post.id}`}>Editar</Link>

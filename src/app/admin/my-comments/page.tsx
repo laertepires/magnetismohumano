@@ -120,7 +120,7 @@ export default function MyCommentsPage() {
                     <p className="text-xs text-muted-foreground">
                       Em{" "}
                       <Link
-                        href={`/post/${comment.post.slug}`}
+                        href={`/${comment.post.slug}`}
                         className="underline text-blue-600"
                       >
                         {comment.post.slug}
