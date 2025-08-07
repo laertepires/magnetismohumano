@@ -43,17 +43,19 @@ export default async function PostPage(props: PostPageProps) {
           {/* <div dangerouslySetInnerHTML={{ __html: post.content }} /> */}
           <div className="card-content">{parse(post.content)}</div>
           <Separator className="my-6" />
-          <p>
-            <strong>Fonte: </strong>
-            <Link
-              href={post.source}
-              target="_blank"
-              className="text-blue-500 underline"
-              rel="noreferrer"
-            >
-              {post.source}
-            </Link>
-          </p>
+          {post.source.trim().length > 0 && (
+            <p>
+              <strong>Fonte: </strong>
+              <Link
+                href={post.source}
+                target="_blank"
+                className="text-blue-500 underline"
+                rel="noreferrer"
+              >
+                {post.source}
+              </Link>
+            </p>
+          )}
 
           <div className="mt-6 flex gap-4">
             <Link href="/" className="btn mt-2">
