@@ -16,9 +16,28 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+
 export const metadata: Metadata = {
-  title: "Magnetismo Humano",
-  description: "Portal sobre Magnetismo Humano",
+  metadataBase: new URL("https://www.magnetizandoonline.com.br"),
+  title: {
+    default: "Magnetizando Online",
+    template: "%s | Magnetizando Online",
+  },
+  description: "Fórum sobre magnetismo humano: técnicas, estudos e troca de experiências.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    url: "https://www.magnetizandoonline.com.br",
+    siteName: "Magnetizando Online",
+    title: "Magnetizando Online",
+    description: "Fórum sobre magnetismo humano: técnicas, estudos e troca de experiências.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Magnetizando Online",
+    description: "Fórum sobre magnetismo humano: técnicas, estudos e troca de experiências.",
+  },
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({
@@ -26,6 +45,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  
   return (
     <html
       lang="pt-BR"
