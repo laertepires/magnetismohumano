@@ -5,6 +5,7 @@ import { Container } from "@/components/ui/container";
 import { Header } from "@/components/ui/header";
 import { Toaster } from "sonner";
 import Script from "next/script";
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -69,6 +70,7 @@ export default function RootLayout({
         <Container className="mt-20">
           <Toaster richColors />
           {children}
+          <SpeedInsights />
         </Container>
       </body>
     </html>
