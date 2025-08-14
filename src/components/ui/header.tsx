@@ -15,7 +15,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 export function Header() {
   const { isLogged, username, logout } = useAuthStore();
   return (
-    <header className="w-full border-b border-border bg-neutral-900 text-white fixed z-50 left-0">
+    <header className="w-full border-b border-border bg-neutral-900 text-white fixed z-50 left-0 px-8">
       <div className="container mx-auto flex h-16 items-center justify-between">
         {/* Logo */}
         <div className="text-xl font-bold">
