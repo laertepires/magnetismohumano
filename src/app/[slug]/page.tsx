@@ -50,6 +50,7 @@ export default async function PostPage(props: PostPageProps) {
                 href={post.source}
                 target="_blank"
                 className="text-blue-500 underline"
+                style={{ textDecoration: "underline !important" }}
                 rel="noreferrer"
               >
                 {post.source}
