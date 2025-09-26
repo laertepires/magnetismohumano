@@ -41,7 +41,7 @@ import { HeadingDropdownMenu } from "@/components/tiptap-ui/heading-dropdown-men
 import { ImageUploadButton } from "@/components/tiptap-ui/image-upload-button";
 import { ListDropdownMenu } from "@/components/tiptap-ui/list-dropdown-menu";
 import { BlockQuoteButton } from "@/components/tiptap-ui/blockquote-button";
-  import {
+import {
   ColorHighlightPopover,
   ColorHighlightPopoverButton,
 } from "@/components/tiptap-ui/color-highlight-popover";
@@ -71,7 +71,7 @@ import { useMobile } from "@/hooks/use-mobile";
 import { handleImageUpload, MAX_FILE_SIZE } from "@/lib/tiptap-utils";
 
 // --- Styles ---
-import "@/components/tiptap-templates/simple/simple-editor.scss"
+import "@/components/tiptap-templates/simple/simple-editor.scss";
 
 // import content from "@/components/tiptap-templates/simple/data/content.json"
 
@@ -182,16 +182,7 @@ export function SimpleEditor({
   const editor = useEditor({
     content,
     onUpdate: ({ editor }) => {
-      const html = editor.getHTML();
-      setContent(html);
-    },
-    editorProps: {
-      attributes: {
-        autocomplete: "on",
-        autocorrect: "on",
-        autocapitalize: "off",
-        "aria-label": "Main content area, start typing to enter text.",
-      },
+      setContent(editor.getHTML()); // will now include <img src="data:...">
     },
     extensions: [
       StarterKit,
@@ -200,7 +191,10 @@ export function SimpleEditor({
       TaskList,
       TaskItem.configure({ nested: true }),
       Highlight.configure({ multicolor: true }),
-      Image,
+      Image.configure({
+        allowBase64: true, 
+        HTMLAttributes: { loading: "lazy", decoding: "async" },
+      }),
       Typography,
       Superscript,
       Subscript,
@@ -209,8 +203,8 @@ export function SimpleEditor({
         accept: "image/*",
         maxSize: MAX_FILE_SIZE,
         limit: 3,
-        upload: handleImageUpload,
-        onError: (error) => console.error("Upload failed:", error),
+        upload: handleImageUpload, // must resolve to a string URL
+        onError: (e) => console.error("Upload failed:", e),
       }),
       TrailingNode,
       Link.configure({ openOnClick: false }),
@@ -227,6 +221,8 @@ export function SimpleEditor({
       setMobileView("main");
     }
   }, [isMobile, mobileView]);
+
+  console.log("Editor content:", editor);
 
   return (
     <EditorContext.Provider value={{ editor }}>

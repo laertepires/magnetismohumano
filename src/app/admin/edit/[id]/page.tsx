@@ -121,7 +121,7 @@ export default function EditPostPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center px-4">
+    <div className="min-h-screen flex items-center px-4 pb-8">
       <div className="w-full max-w-2xl">
         <h1 className="text-2xl font-bold mb-6">Editar Publicação</h1>
         {loading ? (

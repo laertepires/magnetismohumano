@@ -139,9 +139,13 @@ export async function DELETE(req: NextRequest, props: { params: Promise<{ id: st
       return NextResponse.json({ error: "Post não encontrado ou sem permissão" }, { status: 204 });
     }
 
-    await prisma.post.update({
+    // await prisma.post.update({
+    //   where: { id: params.id },
+    //   data: { deleted: true },
+    // });
+
+    await prisma.post.delete({
       where: { id: params.id },
-      data: { deleted: true },
     });
 
     return NextResponse.json({ success: true });
