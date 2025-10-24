@@ -4,7 +4,7 @@ export const LIKE_COOKIE_MAX_AGE = 60 * 60 * 24 * 365 * 5; // 5 anos
 export const likeCookieOptions = {
   maxAge: LIKE_COOKIE_MAX_AGE,
   httpOnly: true,
-  sameSite: "lax",
+  sameSite: "lax" as const,
   secure: process.env.NODE_ENV === "production",
   path: "/",
 };
