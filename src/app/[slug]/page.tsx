@@ -95,7 +95,7 @@ export default async function PostPage(props: PostPageProps) {
     notFound();
   }
 
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const identifier = cookieStore.get(LIKE_COOKIE_NAME)?.value;
   let initiallyLiked = false;
 
