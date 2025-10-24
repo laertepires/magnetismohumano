@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import parse from "html-react-parser";
@@ -11,6 +12,65 @@ interface PostPageProps {
   params: Promise<{
     slug: string;
   }>;
+}
+
+const getPlainText = (html: string) =>
+  html
+    .replace(/<style[\s\S]*?<\/style>/gi, " ")
+    .replace(/<script[\s\S]*?<\/script>/gi, " ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+const buildDescription = (content: string) => {
+  const text = getPlainText(content);
+
+  if (text.length <= 160) {
+    return text;
+  }
+
+  return `${text.slice(0, 157)}...`;
+};
+
+export async function generateMetadata(
+  props: PostPageProps
+): Promise<Metadata> {
+  const params = await props.params;
+  const post = await prisma.post.findUnique({
+    where: { slug: params.slug, deleted: false },
+    select: {
+      title: true,
+      slug: true,
+      content: true,
+    },
+  });
+
+  if (!post) {
+    return {
+      title: "Post não encontrado",
+      description: "O conteúdo que você procura pode ter sido removido.",
+    };
+  }
+
+  const description = buildDescription(post.content);
+  const canonicalPath = `/${post.slug}`;
+
+  return {
+    title: post.title,
+    description,
+    alternates: { canonical: canonicalPath },
+    openGraph: {
+      type: "article",
+      url: `https://www.magnetizandoonline.com.br${canonicalPath}`,
+      title: post.title,
+      description,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description,
+    },
+  };
 }
 
 export default async function PostPage(props: PostPageProps) {
