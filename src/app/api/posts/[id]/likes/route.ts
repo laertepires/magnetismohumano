@@ -18,9 +18,9 @@ async function getLikesCount(postId: string) {
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  props: { params: Promise<{ id: string }> }
 ) {
-  const { id } = params;
+  const { id } = await props.params;
   const post = await getPost(id);
 
   if (!post) {
@@ -54,9 +54,9 @@ export async function GET(
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  props: { params: Promise<{ id: string }> }
 ) {
-  const { id } = params;
+  const { id } = await props.params;
   const post = await getPost(id);
 
   if (!post) {
