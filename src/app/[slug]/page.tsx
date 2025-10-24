@@ -7,6 +7,9 @@ import parse from "html-react-parser";
 import Comments from "./comments";
 import Link from "next/link";
 import ShareButton from "@/components/ui/share-buttom";
+import { LikeButton } from "@/components/ui/like-button";
+import { cookies } from "next/headers";
+import { LIKE_COOKIE_NAME } from "@/lib/likes";
 
 interface PostPageProps {
   params: Promise<{
@@ -79,12 +82,38 @@ export default async function PostPage(props: PostPageProps) {
     where: { slug: params.slug, deleted: false },
     include: {
       author: { select: { username: true } },
+      _count: {
+        select: {
+          comments: true,
+          likes: true,
+        },
+      },
     },
   });
 
   if (!post) {
     notFound();
   }
+
+  const cookieStore = cookies();
+  const identifier = cookieStore.get(LIKE_COOKIE_NAME)?.value;
+  let initiallyLiked = false;
+
+  if (identifier) {
+    const like = await prisma.postLike.findUnique({
+      where: {
+        postId_userIdentifier: {
+          postId: post.id,
+          userIdentifier: identifier,
+        },
+      },
+      select: { id: true },
+    });
+
+    initiallyLiked = Boolean(like);
+  }
+
+  const initialLikes = post._count.likes;
 
   return (
     <div className="container mx-auto max-w-3xl py-10 space-y-8">
@@ -118,11 +147,16 @@ export default async function PostPage(props: PostPageProps) {
             </p>
           )}
 
-          <div className="mt-6 flex gap-4">
-            <Link href="/" className="btn mt-2">
+          <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center">
+            <Link href="/" className="btn mt-2 sm:mt-0">
               <span className="border px-4 py-2 rounded-md">Voltar</span>
             </Link>
-            <div>
+            <div className="flex gap-4">
+              <LikeButton
+                postId={post.id}
+                initialLikes={initialLikes}
+                initiallyLiked={initiallyLiked}
+              />
               <ShareButton />
             </div>
           </div>

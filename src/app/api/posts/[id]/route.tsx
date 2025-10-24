@@ -100,6 +100,14 @@ export async function GET(req: NextRequest, props: { params: Promise<{ id: strin
       where: {
         id,
       },
+      include: {
+        _count: {
+          select: {
+            comments: true,
+            likes: true,
+          },
+        },
+      },
     });
 
     if (!post) {

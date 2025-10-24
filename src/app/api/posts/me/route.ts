@@ -26,6 +26,14 @@ export async function GET(req: NextRequest) {
     const posts = await prisma.post.findMany({
       where: { authorId: user.id },
       orderBy: { createdAt: "desc" },
+      include: {
+        _count: {
+          select: {
+            comments: true,
+            likes: true,
+          },
+        },
+      },
     });
 
     return NextResponse.json(posts);

@@ -37,6 +37,7 @@ export default async function Home(props: SearchParams) {
         _count: {
           select: {
             comments: true,
+            likes: true,
           },
         },
       },
@@ -78,6 +79,11 @@ export default async function Home(props: SearchParams) {
                   <span className="pl-2">
                     {post._count.comments} comentário
                     {post._count.comments === 1 ? "" : "s"}
+                  </span>
+                  ·
+                  <span className="pl-2">
+                    {post._count.likes} curtida
+                    {post._count.likes === 1 ? "" : "s"}
                   </span>
                 </div>
               </a>

@@ -81,6 +81,12 @@ export async function GET() {
             username: true,
           },
         },
+        _count: {
+          select: {
+            comments: true,
+            likes: true,
+          },
+        },
       },
     });
 

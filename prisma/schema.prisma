@@ -40,7 +40,18 @@ model Post {
   author      User      @relation(fields: [authorId], references: [id])
   authorId    String
   comments    Comment[]
+  likes       PostLike[]
   deleted    Boolean   @default(false)
+}
+
+model PostLike {
+  id             String   @id @default(uuid())
+  post           Post     @relation(fields: [postId], references: [id])
+  postId         String
+  userIdentifier String
+  createdAt      DateTime @default(now())
+
+  @@unique([postId, userIdentifier])
 }
 
 model Comment {
